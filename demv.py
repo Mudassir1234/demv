@@ -57,28 +57,77 @@ def sample(d: pd.DataFrame, s_vars: list, label: str, round_level: float, debug:
 
 
 class DEMV:
-    def __init__(self, round_level=None, debug=False, stop=-1):
+    '''
+    Debiaser for Multiple Variable
+
+    Attributes
+    ----------
+    round_level : float
+        Tolerance value to balance the sensitive groups
+    debug : bool
+        Prints w_exp/w_obs, useful for debugging
+    stop : int
+        Maximum number of balance iterations
+    iter : int
+        Maximum number of iterations
+
+    Methods
+    -------
+    fit_transform(dataset, protected_attrs, label_name)
+        Returns the balanced dataset
+
+    get_iters()
+        Returns the maximum number of iterations
+
+    '''
+
+    def __init__(self, round_level: float = None, debug: bool = False, stop: int = -1):
+        '''
+        Parameters
+        ----------
+        round_level : float, optional
+            Tolerance value to balance the sensitive groups (default is None)
+        debug : bool, optional
+            Prints w_exp/w_obs, useful for debugging (default is False)
+        stop : int, optional
+            Maximum number of balance iterations (default is -1)
+        '''
         self.round_level = round_level
         self.debug = debug
-        self.disparities = None
         self.stop = stop
         self.iter = 0
 
-    def predict(self, dataset):
-        return dataset
-
-    def transform(self, dataset):
-        return dataset
-
     def fit_transform(self, dataset: pd.DataFrame, protected_attrs: list, label_name: str):
+        '''
+        Balances the dataset's sensitive groups
+
+        Parameters
+        ----------
+        dataset : pandas.DataFrame
+            Dataset to be balanced
+        protected_attrs : list
+            List of protected attribute names
+        label_name : str
+            Label name
+
+        Returns
+        -------
+        pandas.DataFrame :
+            Balanced dataset
+        '''
         df_new, disparities, iter = sample(dataset, protected_attrs,
                                            label_name, self.round_level, self.debug, 0, [], True, self.stop)
         self.disparities = disparities
         self.iter = iter
         return df_new
 
-    def get_disparities(self):
-        return self.disparities
-
     def get_iters(self):
+        '''
+        Gets the maximum number of iterations
+
+        Returns
+        -------
+        int:
+            maximum number of iterations
+        '''
         return self.iter

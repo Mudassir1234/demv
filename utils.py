@@ -16,6 +16,24 @@ import seaborn as sns
 
 
 def statistical_parity(data_pred: pd.DataFrame, group_condition: dict, label_name: str, positive_label: str):
+    '''
+    Implementation of Statistical Parity
+
+    Parameters
+    ----------
+    data_pred : pandas.DataFrame
+        DataFrame with predicted label
+    group_condition: dict
+        Dictionary for the definition of the unprivileged group of the type `{sensitive_var: unpriv_value}`
+    label_name: str
+        Label name
+    positive_label: str
+        Positive value of the label
+
+    Returns
+    -------
+    float : Statistical Parity value
+    '''
     query = '&'.join([f'{k}=={v}' for k, v in group_condition.items()])
     label_query = label_name+'=='+str(positive_label)
     unpriv_group_prob = (len(data_pred.query(query + '&' + label_query))
@@ -26,6 +44,24 @@ def statistical_parity(data_pred: pd.DataFrame, group_condition: dict, label_nam
 
 
 def disparate_impact(data_pred: pd.DataFrame, group_condition: dict, label_name: str, positive_label: str):
+    '''
+    Implementation of Disparate Impact
+
+    Parameters
+    ----------
+    data_pred : pandas.DataFrame
+        DataFrame with predicted label
+    group_condition: dict
+        Dictionary for the definition of the unprivileged group of the type `{sensitive_var: unpriv_value}`
+    label_name: str
+        Label name
+    positive_label: str
+        Positive value of the label
+
+    Returns
+    -------
+    float : Disparate Impact value
+    '''
     query = '&'.join([f'{k}=={v}' for k, v in group_condition.items()])
     label_query = label_name+'=='+str(positive_label)
     unpriv_group_prob = (len(data_pred.query(query + '&' + label_query))
@@ -35,37 +71,24 @@ def disparate_impact(data_pred: pd.DataFrame, group_condition: dict, label_name:
     return min(unpriv_group_prob / priv_group_prob, priv_group_prob/unpriv_group_prob) if unpriv_group_prob != 0 else unpriv_group_prob / priv_group_prob
 
 
-def _compute_tpr_fpr(y_true, y_pred):
-    matrix = confusion_matrix(y_true, y_pred)
-    FP = matrix.sum(axis=0) - np.diag(matrix)
-    FN = matrix.sum(axis=1) - np.diag(matrix)
-    TP = np.diag(matrix)
-    TN = matrix.sum() - (FP + FN + TP)
-
-    TPR = TP/(TP+FN)
-    FPR = FP/(FP+TN)
-    return FPR, TPR
-
-
-def average_odds_difference(data_true: pd.DataFrame, data_pred: pd.DataFrame, group_condition: str, label: str):
-    unpriv_group_true = data_true.query(group_condition)
-    priv_group_true = data_true.drop(unpriv_group_true.index)
-    unpriv_group_pred = data_pred.query(group_condition)
-    priv_group_pred = data_pred.drop(unpriv_group_pred.index)
-
-    y_true_unpriv = unpriv_group_true[label].values.ravel()
-    y_pred_unpric = unpriv_group_pred[label].values.ravel()
-    y_true_priv = priv_group_true[label].values.ravel()
-    y_pred_priv = priv_group_pred[label].values.ravel()
-
-    fpr_unpriv, tpr_unpriv = _compute_tpr_fpr(
-        y_true_unpriv, y_pred_unpric)
-    fpr_priv, tpr_priv = _compute_tpr_fpr(
-        y_true_priv, y_pred_priv)
-    return (fpr_unpriv - fpr_priv) + (tpr_unpriv - tpr_priv)/2
-
-
 def zero_one_loss_diff(y_true: np.ndarray, y_pred: np.ndarray, sensitive_features: list):
+    '''
+    Computes Zero One Loss
+
+    Parameters
+    ----------
+    y_true : np.ndarray
+        List of true labels
+    y_pred : np.ndarray
+        List of predicted values
+    sensitive_features : list
+        Sensitive variable names
+
+    Returns
+    -------
+    typing.Any or pandas.Series or pandas.DataFrame
+        Difference of the metric among groups
+    '''
     mf = MetricFrame(metrics=zero_one_loss,
                      y_true=y_true,
                      y_pred=y_pred,
