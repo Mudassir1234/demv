@@ -20,17 +20,17 @@ The project is organized in the following way:
 Create the conda environment using the following command:
 
 ```shell
-$conda env create -f environment.yml
+conda env create -f environment.yml
 ```
 
 ### Pip users
 
-Create virtual environment using the following command:
+Create the virtual environment using the following commands:
 
 ```shell
-$virtualenv <env_name>
-$source <env_name>/bin/activate
-$pip install -r requirements.txt
+virtualenv <env_name>
+source <env_name>/bin/activate
+pip install -r requirements.txt
 ```
 
 To reproduce the analysis simply run the corresponding notebook.
