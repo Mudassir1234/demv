@@ -43,11 +43,11 @@ The project is organized in the following way:
 
 - `stop` : int
 
-  Maximum number of balance iterations
+  Maximum number of balance iterations, after which the algorithm stops
 
 - `iter` : int
 
-  Maximum number of iterations
+  Maximum number of iterations computed by the algorithm to balance the groups
 
 ### Methods
 
