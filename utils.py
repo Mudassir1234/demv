@@ -107,6 +107,37 @@ def _train_test_split(df_train, df_test, label):
 
 
 def cross_val(classifier, data, label, groups_condition, sensitive_features, positive_label, debiaser=None, exp=False, n_splits=10):
+    '''
+    Evaluation function
+
+    Parameters
+    ----------
+    classifier : 
+        Sklearn classifier
+    data : pandas.DataFrame
+        Train/Test dataset
+    label : string
+        Label name
+    group_condition : dict
+        Dictionary for the definition of the unprivileged group of the type `{sensitive_var: unpriv_value}`
+    sensitive_features : list
+        List of sensitive attribute names
+    positive_label : int
+        Positive value of the label
+    debiaser : optional
+        Debiaser function (default to None)
+    exp : bool, optional
+        Flag to indicate if use Exp Gradient function (default to False)
+    n_splits : int, optional
+        Number of train-test split
+
+    Returns
+    -------
+    sklearn.classifier:
+        Trained classifier
+    dict:
+        Dictionary of selected evaluation metrics
+    '''
     fold = KFold(n_splits=n_splits, shuffle=True, random_state=2)
     metrics = {
         'stat_par': [],
