@@ -33,19 +33,19 @@ The project is organized in the following way:
 
 ### Attributes
 
-- `round_level` : float
+- `round_level : float`
 
   Tolerance value to balance the sensitive groups
 
-- `debug` : bool
+- `debug : bool`
 
   Prints w_exp/w_obs, useful for debugging
 
-- `stop` : int
+- `stop : int`
 
   Maximum number of balance iterations, after which the algorithm stops
 
-- `iter` : int
+- `iter : int`
 
   Maximum number of iterations computed by the algorithm to balance the groups
 
