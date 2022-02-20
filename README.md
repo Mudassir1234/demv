@@ -35,19 +35,19 @@ The project is organized in the following way:
 
 - `round_level : float`
 
-  Tolerance value to balance the sensitive groups
+      Tolerance value to balance the sensitive groups
 
 - `debug : bool`
 
-  Prints w_exp/w_obs, useful for debugging
+      Prints w_exp/w_obs, useful for debugging
 
 - `stop : int`
 
-  Maximum number of balance iterations, after which the algorithm stops
+      Maximum number of balance iterations, after which the algorithm stops
 
 - `iter : int`
 
-  Maximum number of iterations computed by the algorithm to balance the groups
+      Maximum number of iterations computed by the algorithm to balance the groups
 
 ### Methods
 
