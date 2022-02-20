@@ -1,6 +1,6 @@
 # Debiaser for Multiple Variables
 
-This repository contains the implementation of _DEMV_ algorithm described in the paper: _Debiaser for Multiple Variables: a data and model agnostic bias mitigaton method for classification problems_
+This repository contains the implementation of _DEMV_ algorithm described in the paper: _Enhancing Fairness in Classification Tasks with Multiple Variables: a Data- and Model-Agnostic Approach_
 
 ## Project structure
 
