@@ -29,24 +29,28 @@ The project is organized in the following way:
    pip install -r requirements.txt
    ```
 
+### Note
+
+If the previous ways to not work just install the following libraries manually:
+
+- [pandas](https://pandas.pydata.org/)
+- [numpy](https://numpy.org/)
+- [imblearn](https://imbalanced-learn.org/stable/)
+
 ## Class description
 
 ### Attributes
 
 - `round_level : float`
-
       Tolerance value to balance the sensitive groups
 
 - `debug : bool`
-
       Prints w_exp/w_obs, useful for debugging
 
 - `stop : int`
-
       Maximum number of balance iterations, after which the algorithm stops
 
 - `iter : int`
-
       Maximum number of iterations computed by the algorithm to balance the groups
 
 ### Methods
