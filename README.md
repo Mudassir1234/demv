@@ -29,13 +29,13 @@ The project is organized in the following way:
    pip install -r requirements.txt
    ```
 
-### Note
+3. **Manual setup**
 
-If the previous ways to not work just install the following libraries manually:
+   If the previous ways to not work just install the following libraries manually:
 
-- [pandas](https://pandas.pydata.org/)
-- [numpy](https://numpy.org/)
-- [imblearn](https://imbalanced-learn.org/stable/)
+   - [pandas](https://pandas.pydata.org/)
+   - [numpy](https://numpy.org/)
+   - [imblearn](https://imbalanced-learn.org/stable/)
 
 ## Class description
 
