@@ -2,6 +2,23 @@
 
 This repository contains the implementation of _DEMV_ algorithm described in the paper: _Enhancing Fairness in Classification Tasks with Multiple Variables: a Data- and Model-Agnostic Approach_
 
+## Citation request
+
+Please cite our paper if you use DEMV in your experiments:
+
+_d’Aloisio, G., Stilo, G., Di Marco, A., D’Angelo, A. (2022). Enhancing Fairness in Classification Tasks with Multiple Variables: A Data- and Model-Agnostic Approach. In: Boratto, L., Faralli, S., Marras, M., Stilo, G. (eds) Advances in Bias and Fairness in Information Retrieval. BIAS 2022. Communications in Computer and Information Science, vol 1610. Springer, Cham. https://doi.org/10.1007/978-3-031-09316-6_11_
+
+```
+@inproceedings{d2022enhancing,
+  title={Enhancing Fairness in Classification Tasks with Multiple Variables: A Data-and Model-Agnostic Approach},
+  author={d’Aloisio, Giordano and Stilo, Giovanni and Di Marco, Antinisca and D’Angelo, Andrea},
+  booktitle={International Workshop on Algorithmic Bias in Search and Recommendation},
+  pages={117--129},
+  year={2022},
+  organization={Springer}
+}
+```
+
 ## Project structure
 
 The project is organized in the following way:
