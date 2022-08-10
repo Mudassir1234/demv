@@ -3,9 +3,7 @@ import pandas as pd
 from imblearn.over_sampling import SMOTE, ADASYN
 
 
-def _generate_sample_smote(smote, x, x_tot, size=1):
-    smote.nn_k_.fit(x)
-    nnk = smote.nn_k_.kneighbors(x, return_distance=False)[:, 1:]
+def _generate_sample_smote(smote, x, x_tot, nnk, size=1):
     samples_indices = np.random.randint(low=0, high=nnk.size, size=1)
     rows = np.floor_divide(samples_indices, nnk.shape[1])
     cols = np.mod(samples_indices, nnk.shape[1])
@@ -30,21 +28,24 @@ def _balance_set(w_exp, w_obs, df: pd.DataFrame, tot_df, strategy, round_level=N
     disp = round(w_exp / w_obs, round_level) if round_level else w_exp / w_obs
     disparity = [disp]
     i = 0
-    x = df.values
     x_tot = tot_df.values
 
     if strategy == 'smote':
         smote = SMOTE()
         smote._validate_estimator()
+        smote.nn_k_.fit(x_tot)
+        nnk = smote.nn_k_.kneighbors(x, return_distance=False)[:, 1:]
+
 
     if strategy == 'adasyn':
         adasyn = ADASYN()
         adasyn._validate_estimator()
 
     while disp != 1 and i != k:
+        x = df.values
         if w_exp / w_obs > 1:
             if strategy == 'smote':
-                sample = _generate_sample_smote(smote, x, x_tot)
+                sample = _generate_sample_smote(smote, x, x_tot, nnk)
                 df = df.append(pd.DataFrame(sample.reshape(
                     1, -1), columns=list(df)), ignore_index=True)
             elif strategy == 'adasyn':
