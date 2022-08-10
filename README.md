@@ -1,6 +1,6 @@
 # DEMV : Debiaser for Multiple Variables
 
-![GitHub last commit](https://img.shields.io/github/last-commit/giordanoDaloisio/demv2022?style=for-the-badge) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+![GitHub last commit](https://img.shields.io/github/last-commit/giordanoDaloisio/demv2022?style=for-the-badge) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 
 ## Table of contents
 * [General info](#general-info)
