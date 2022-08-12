@@ -28,7 +28,7 @@ parser.add_argument('number_of_features', type=int,
                     help='Required argument: Number of sensitive features in the dataset to consider, up to 4. ')
 
 parser.add_argument('--classifier', type=str, nargs='?', default="logistic",
-                    help='Optional argument: classifier to use. Can be logistic, svc, mlp, gradient. Defaults to Logistic Regression.')
+                    help='Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).')
 
 args = parser.parse_args()
 
