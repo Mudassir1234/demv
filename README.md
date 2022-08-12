@@ -126,7 +126,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --classifier [CLASSIFIER]
-                        Optional argument: classifier to use. Can be logistic, svc, mlp, gradient. Defaults to Logistic Regression.
+                       Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).
 ```
 
 Please note that not all datasets, given their properties, have 4 available number_of_features or can be run with any method. Please contact us if you notice some unusual error. All the testing done by us was documented in the paper.
