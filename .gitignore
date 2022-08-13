@@ -136,3 +136,5 @@ cache
 data/jigsaw_data.csv
 .DS_Store
 ris/*
+launch.sh
+out
