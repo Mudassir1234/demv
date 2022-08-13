@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore')
 import argparse
 
 
-parser = argparse.ArgumentParser(description='Metrics generator for DEMV testing.')
+parser = argparse.ArgumentParser(description='Metrics generator for DEMV testing.', epilog="Example usage: python generatemetrics.py cmc biased 3 --classifier svc")
 
 parser.add_argument('dataset', type=str, 
                     help='Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen method.'

@@ -113,20 +113,26 @@ to receive help and information on the requested parameters. Shortly put, you sh
 Here is the output of the help command, which explains the parameters:
 
 ```shell
-usage: generatemetrics.py [-h] [--classifier [CLASSIFIER]] dataset method number_of_features
+usage: generatemetrics.py [-h] [--classifier [{logistic,gradient,svc,mlp}]]
+                          {adult,cmc,compas,crime,drugs,german,obesity,park,wine,all} {biased,eg,grid,uniform,smote,adasyn} {1,2,3,4}
 
 Metrics generator for DEMV testing.
 
 positional arguments:
-  dataset               Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen
-                        method. All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
-  method                Required argument: Chosen method to generate metrics for. Can be `biased`, `demv`, `eg`, `grid`.
-  number_of_features    Required argument: Number of sensitive features in the dataset to consider, up to 4.
+  {adult,cmc,compas,crime,drugs,german,obesity,park,wine,all}
+                        Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the
+                        chosen method. All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
+  {biased,eg,grid,uniform,smote,adasyn}
+                        Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.
+  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 4.
 
 optional arguments:
   -h, --help            show this help message and exit
-  --classifier [CLASSIFIER]
-                       Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).
+  --classifier [{logistic,gradient,svc,mlp}]
+                        Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to
+                        Logistic Regression (logistic).
+
+Example usage: python generatemetrics.py cmc biased 3 --classifier svc
 ```
 
 Please note that not all datasets, given their properties, have 4 available number_of_features or can be run with any method. Please contact us if you notice some unusual error. All the testing done by us was documented in the paper.
@@ -137,7 +143,7 @@ For instance:
 
 or
 
-`python generatemetrics.py crime demv 2`
+`python generatemetrics.py crime uniform 2`
 
 Results will then be saved in the folder "ris" inside the folder generatemetrics, according to how many sensitive variables you have chosen to consider, up to 4. In particular, the output file will have the following structure:
 
