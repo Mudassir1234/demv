@@ -19,16 +19,16 @@ parser = argparse.ArgumentParser(description='Metrics generator for DEMV testing
 
 parser.add_argument('dataset', type=str, 
                     help='Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen method.'
-                    + ' All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.')
+                    + ' All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.', choices=['adult', 'cmc', 'compas', 'crime', 'drugs', 'german', 'obesity', 'park', 'wine', 'all'])
 
 parser.add_argument('method', type=str, 
-                    help='Required argument: Chosen method to generate metrics for. Can be biased, demv, eg, grid.')
+                    help='Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.', choices=['biased', 'eg', 'grid', 'uniform', 'smote', 'adasyn'])
 
 parser.add_argument('number_of_features', type=int,
-                    help='Required argument: Number of sensitive features in the dataset to consider, up to 4. ')
+                    help='Required argument: Number of sensitive features in the dataset to consider, up to 4. ', choices=[1,2,3,4])
 
 parser.add_argument('--classifier', type=str, nargs='?', default="logistic",
-                    help='Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).')
+                    help='Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).', choices=['logistic', 'gradient', 'svc', 'mlp'])
 
 args = parser.parse_args()
 
