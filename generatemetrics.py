@@ -3,9 +3,9 @@ sys.path.append('../')
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
-from sklearn.neural_network import MLPRegressor
+from sklearn.neural_network import MLPClassifier
 from fairlearn.reductions import ExponentiatedGradient, BoundedGroupLoss, ZeroOneLoss, GridSearch
 import getdataset
 from utils import *
@@ -62,11 +62,11 @@ if args.classifier is not None:
     if(classi == 'logistic'):
         classifier = LogisticRegression()
     elif(classi == 'gradient'):
-        classifier = GradientBoostingRegressor()
+        classifier = GradientBoostingClassifier()
     elif(classi == 'svc'):
         classifier = SVC()
     elif(classi == 'mlp'):
-        classifier = MLPRegressor(activation = 'relu', solver='adam')
+        classifier = MLPClassifier(activation = 'relu', solver='adam')
 else:
     classi = 'logistic'
     classifier = LogisticRegression()
