@@ -59,15 +59,15 @@ The included datasets are:
 
 | Dataset  | Full Name | Type | Description  | Sensitive variables  |
 |---|---|---|---| ---|
-| ADULT  | Adult income | Binary | The goal is to predict if a person has an income higher than 50k a year.   |  Sex, race, bachelors, hours<10 |
+| ADULT  | Adult income | Binary | The goal is to predict if a person has an income higher than 50k a year.   |  Sex, race, bachelors |
 | COMPAS | ProPublica Recidivism | Binary | The goal is to predict if a person will recidivate in the next two years. |Sex, race, age  |
-| GERMAN| German credit | Binary | The goal is to predict if a person will recidivate in the next two years. | Sex, age, investment_as_income_percentage, month |
-|CMC| Contraceptive Method Choice | Multiclass | This multi-class dataset comprises 1,473 instances and ten columns about women’s contraceptive method choice. | wife_religion, wife_work, wife_edu, hus_occ |
-| CRIME | Communities and Crime | Multiclass | This multi-class dataset is made of 1,994 instances by 100 attributes and contains information about the per-capita violent crimes in a community. | black_people, hisp_people, MedRent, racePctAsian |
-| DRUG | Drug Usage | Multiclass | This multi-class dataset has 1,885 instances and 15 attributes about the frequency of drugs consumption. | race, gender, age, country |
-| LAW | Law School Admission | Multiclass | This multi-class dataset comprises 20,694 samples by 14 attributes and contains information about the bar passage data of Law School students.| race, gender, age, fam_inc |
-| PARK | Parkinson's Telemonitoring | Multiclass |  This multi-class dataset comprises 5875 items and 19 features about Unified Parkinson’s Disease Rating Scale (UPDRS) score classification. | age, sex, PPE, Shimmer |
-| WINE | Wine Quality | Multiclass | This multi-class dataset comprises 6,438 instances and 13 attributes about wine quality (variable quality). The classes are four increasing values indicating quality. | alcohol, type, density, pH |
+| GERMAN| German credit | Binary | The goal is to predict if a person will recidivate in the next two years. | Sex, age, investment_as_income_percentage |
+|CMC| Contraceptive Method Choice | Multiclass | This multi-class dataset comprises 1,473 instances and ten columns about women’s contraceptive method choice. | wife_religion, wife_work, wife_edu |
+| CRIME | Communities and Crime | Multiclass | This multi-class dataset is made of 1,994 instances by 100 attributes and contains information about the per-capita violent crimes in a community. | black_people, hisp_people, MedRent |
+| DRUG | Drug Usage | Multiclass | This multi-class dataset has 1,885 instances and 15 attributes about the frequency of drugs consumption. | race, gender, age  |
+| LAW | Law School Admission | Multiclass | This multi-class dataset comprises 20,694 samples by 14 attributes and contains information about the bar passage data of Law School students.| race, gender, age |
+| PARK | Parkinson's Telemonitoring | Multiclass |  This multi-class dataset comprises 5875 items and 19 features about Unified Parkinson’s Disease Rating Scale (UPDRS) score classification. | age, sex, PPE  |
+| WINE | Wine Quality | Multiclass | This multi-class dataset comprises 6,438 instances and 13 attributes about wine quality (variable quality). The classes are four increasing values indicating quality. | alcohol, type, density |
 
 ## Experiment replication
 
@@ -124,7 +124,7 @@ positional arguments:
                         chosen method. All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
   {biased,eg,grid,uniform,smote,adasyn}
                         Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.
-  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 4.
+  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 3.
 
 optional arguments:
   -h, --help            show this help message and exit
