@@ -11,6 +11,8 @@ import getdataset
 from utils import *
 from demv import DEMV
 import warnings
+import os
+from os.path import exists
 warnings.filterwarnings('ignore')
 import argparse
 
@@ -52,6 +54,23 @@ def run_metrics(method, data, unpriv_group, sensitive_features, label, positive_
     m = prepareplots( metr, 'discard' )
 
     return m
+
+
+
+file_exists = exists("ris")
+if not file_exists:
+    os.makedirs("ris")
+    os.makedirs("ris/1features")
+    os.makedirs("ris/2features")
+    os.makedirs("ris/3features")
+else:
+    if not exists("ris/1features"):
+        os.makedirs("ris/1features")
+    if not exists("ris/2features"):
+        os.makedirs("ris/2features")
+    if not exists("ris/3features"):
+        os.makedirs("ris/3features")
+
 
 
 dataset = [args.dataset]
