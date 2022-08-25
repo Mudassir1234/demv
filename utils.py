@@ -257,6 +257,7 @@ def _model_train(df_train, df_test, label, classifier, metrics, groups_condition
     metrics['acc'].append(accuracy_score(y_test, pred))
     return metrics
 
+
 def _model_train2(df_train, df_test, label, classifier, metrics, groups_condition, sensitive_features, positive_label, exp=False):
     x_train, x_test, y_train, y_test = _train_test_split(
         df_train, df_test, label)
@@ -354,6 +355,7 @@ def save_metrics(type, name, metric):
     df.explode(list(df.columns)).to_csv(f'ris/{name}_{type}.csv')
 
 
+
 def blackbox(pred, label):
     from balancers import MulticlassBalancer
 
@@ -372,6 +374,8 @@ def blackboxbin(pred, label):
     pred[label] = y_adj
 
     return pred
+
+
 
 def get_items(dataset,number_of_features):
     data = pd.read_csv("datarefactored/" + dataset + ".csv",index_col = 0)

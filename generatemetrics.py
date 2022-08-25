@@ -12,6 +12,7 @@ from utils import *
 from demv import DEMV
 import warnings
 import os
+import confusionmatrix
 from os.path import exists
 warnings.filterwarnings('ignore')
 import argparse
@@ -21,7 +22,7 @@ parser = argparse.ArgumentParser(description='Metrics generator for DEMV testing
 
 parser.add_argument('dataset', type=str, 
                     help='Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen method.'
-                    + ' All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.', choices=['adult', 'cmc', 'compas', 'crime', 'drugs', 'german', 'obesity', 'park', 'wine', 'all'])
+                    + ' All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.', choices=['adult', 'cmc', 'law', 'compas', 'crime', 'drugs', 'german', 'obesity', 'park', 'wine', 'all'])
 
 parser.add_argument('method', type=str, 
                     help='Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.', choices=['biased', 'eg', 'grid', 'uniform', 'smote', 'adasyn'])
@@ -31,6 +32,7 @@ parser.add_argument('number_of_features', type=int,
 
 parser.add_argument('--classifier', type=str, nargs='?', default="logistic",
                     help='Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).', choices=['logistic', 'gradient', 'svc', 'mlp'])
+parser.add_argument("--cm", action=argparse.BooleanOptionalAction, help = "Optional argument: only generate Confusion Matrices for the selected dataset.")
 
 args = parser.parse_args()
 
@@ -71,8 +73,12 @@ else:
     if not exists("ris/3features"):
         os.makedirs("ris/3features")
 
+file_exists = exists("confusionmatrices")
+if not file_exists:
+    os.makedirs("confusionmatrices")
 
 
+cm = args.cm
 dataset = [args.dataset]
 method = [args.method]
 number_of_features = min(4,args.number_of_features)
@@ -95,6 +101,16 @@ pipeline = Pipeline([
   ('classifier', classifier)
 ])
 
+
+if cm:
+
+    dataset = dataset[0]
+    confusionmatrix.generatecm(dataset, normalize = True)
+    confusionmatrix.generatecm(dataset, debiaser="demv", normalize=True)
+    confusionmatrix.generatecm(dataset, debiaser="eg", normalize=True)
+    confusionmatrix.generatecm(dataset, debiaser="grid", normalize=True)
+
+    sys.exit(0)
 
 if dataset == ['all']:
     if number_of_features != 3:
