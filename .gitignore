@@ -138,9 +138,5 @@ data/jigsaw_data.csv
 ris/*
 launch.sh
 out
-<<<<<<< HEAD
 confusionmatrices/*
 confusionmatrices.ipynb
-=======
-confusionmatrices
->>>>>>> main
