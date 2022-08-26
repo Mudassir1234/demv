@@ -125,7 +125,3 @@ def generatecm(dataset, debiaser = None , normalize = False):
     datanosens = newdata.query('~(' + query + ')')
 
     plot_confusion_matrix(datanosens['y_true'], datanosens[label], classes, dataset, normalize = normalize, method = debiaser, sens = False)
-
-    #Invece del valore, nelle matrici, inserisci le label del dataset (Controlla le label originarie del law)
-    #1. Mettiamo la label (classe di punteggi alta - media - bassa)
-    #2. La label positiva la mettiamo in evidenza
