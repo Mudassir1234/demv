@@ -157,6 +157,8 @@ class DEMV:
         strategy: string, optional
             Balancing strategy to use. Must be one of `smote`, `adasyn` and `uniform` (default is `uniform`)
         '''
+        assert (strategy == 'uniform' or strategy == 'smote' or strategy == 'adasyn'),"Invalid strategy in DEMV, must be one of uniform, smote or adasyn"
+        
         self.round_level = round_level
         self.debug = debug
         self.stop = stop
