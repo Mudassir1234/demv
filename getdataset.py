@@ -125,7 +125,7 @@ def getdataset(dataset, numberoffeatures):
             data.loc[data[key] < threshold, key ] = 0
             data.loc[data[key] >= threshold, key ] = 1
         elif numberoffeatures == 4:
-            print("COMPAS only allows 3 sensitive variables.")
+            raise Exception("COMPAS only allows 3 sensitive variables.")
 
         sensitive_vars = protected_group.keys()
 
