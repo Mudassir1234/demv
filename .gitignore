@@ -139,3 +139,4 @@ ris/*
 launch.sh
 out
 confusionmatrices/*
+confusionmatrices.ipynb
