@@ -1,24 +1,18 @@
-import sklearn
-from sklearn.metrics import confusion_matrix
+from copy import deepcopy
+
 import matplotlib.pyplot as plt
 import numpy as np
+from fairlearn.reductions import (BoundedGroupLoss, ExponentiatedGradient,
+                                  GridSearch, ZeroOneLoss)
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import KFold
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
 import getdataset
 import utils
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-from copy import deepcopy
-import pandas as pd
-from collections import defaultdict
-from sklearn.model_selection import KFold
-from copy import deepcopy
 from demv import DEMV
-from fairlearn.metrics import MetricFrame
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.svm import SVC
-from sklearn.neural_network import MLPClassifier
-from fairlearn.reductions import ExponentiatedGradient, BoundedGroupLoss, ZeroOneLoss, GridSearch
-
 
 pipeline = Pipeline([
   ('scaler', StandardScaler()),
@@ -79,7 +73,7 @@ def getprediction(data, label, classifier, groups_condition, sensitive_features,
     expbool = False
 
     if(debiaser == 'demv'):
-        demv = DEMV(round_level=1, debug = False, stop = 618, strategy='random')
+        demv = DEMV(round_level=1, debug = False)
         debiaser = demv
         data = debiaser.fit_transform(
             data, [keys for keys in groups_condition.keys()], label)
@@ -96,7 +90,7 @@ def getprediction(data, label, classifier, groups_condition, sensitive_features,
         grid = GridSearch(pipeline, constr, sample_weight_name="classifier__sample_weight")
         expbool = True
         classifier = grid
-
+    
     newdata = deepcopy(data)
     newdata['y_true'] = data[label]
 
@@ -115,24 +109,19 @@ def getprediction(data, label, classifier, groups_condition, sensitive_features,
             model.fit(x_train, y_train)
 
         pred = model.predict(x_test)
-
         newdata.iloc[test, newdata.columns.get_loc(label)] = pred
 
     return newdata
     
 def generatecm(dataset, debiaser = None , normalize = False):
     data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(dataset, 2)
-    newdata = getprediction(data, label, classifier, unpriv_group, sensitive_features, positive_label, debiaser=debiaser )
+    newdata = getprediction(data, label, classifier, unpriv_group, sensitive_features, positive_label, debiaser=debiaser)
     classes = newdata['y_true'].unique()
 
     query = '&'.join([str(k) + '==' + str(v)
                      for k, v in unpriv_group.items()])
-    #label_query = label + '==' + str(positive_label)
-
     datasens = newdata.query(query)
-
     plot_confusion_matrix(datasens['y_true'], datasens[label], classes, dataset, normalize = normalize, method = debiaser, sens = True)
-
     datanosens = newdata.query('~(' + query + ')')
 
     plot_confusion_matrix(datanosens['y_true'], datanosens[label], classes, dataset, normalize = normalize, method = debiaser, sens = False)
