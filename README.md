@@ -113,24 +113,25 @@ to receive help and information on the requested parameters. Shortly put, you sh
 Here is the output of the help command, which explains the parameters:
 
 ```shell
-usage: generatemetrics.py [-h] [--classifier [{logistic,gradient,svc,mlp}]]
-                          {adult,cmc,compas,crime,drugs,german,obesity,park,wine,all} {biased,eg,grid,uniform,smote,adasyn} {1,2,3,4}
+usage: generatemetrics.py [-h] [--classifier [{logistic,gradient,svc,mlp}]] [--cm | --no-cm]
+                          {adult,cmc,law,compas,crime,drugs,german,obesity,park,wine,all} {biased,eg,grid,uniform,smote,adasyn} {1,2,3,4}
 
 Metrics generator for DEMV testing.
 
 positional arguments:
-  {adult,cmc,compas,crime,drugs,german,obesity,park,wine,all}
-                        Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the
-                        chosen method. All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
+  {adult,cmc,law,compas,crime,drugs,german,obesity,park,wine,all}
+                        Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen method.
+                        All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
   {biased,eg,grid,uniform,smote,adasyn}
                         Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.
-  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 3.
+  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 4.
 
 optional arguments:
   -h, --help            show this help message and exit
   --classifier [{logistic,gradient,svc,mlp}]
-                        Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to
-                        Logistic Regression (logistic).
+                        Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression
+                        (logistic).
+  --cm, --no-cm         Optional argument: only generate Confusion Matrices for the selected dataset.
 
 Example usage: python generatemetrics.py cmc biased 3 --classifier svc
 ```
@@ -150,6 +151,24 @@ Results will then be saved in the folder "ris" inside the folder generatemetrics
 `ris/[number_of_features]features/metrics_[DATASET]_[METHOD]_[NUMBER_OF_FEATURES]_[CLASSIFIER].csv`
 
 A temporary discard_eval.csv file will also be created, but can be removed at any time and will always be overwritten by the subsequent execution.
+
+Another use case can be generating the confusion matrices for a dataset instead of the related metrics. In order to do that, just add the option --cm. In this case the number of features and method will be ignored, and several confusion matrices will be generated. In particular, the command
+
+`python generatemetrics.py cmc demv 3 --cm`
+
+will ignore the "demv" and "3" attributes and generate the following confusion matrices:
+
+1. Confusion matrix for the sensible groups in the dataset:
+    1. Without any debiaser
+    2. Pre-processed with DEMV
+    3. Processed with Exponentiated Gradient
+    4. Processed with Grid Search
+2. Confusion matrix for the non-sensible groups in the dataset:
+    1. Without any debiaser
+    2. Pre-processed with DEMV
+    3. Processed with Exponentiated Gradient
+    4. Processed with Grid Search.
+  
 
 ## DEMV class description
 
