@@ -20,12 +20,13 @@ pipeline = Pipeline([
 ])
 classifier = pipeline
 
-
-def plot_confusion_matrix(y_true, y_pred, classes, datasetname,
+def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,
-                          cmap=plt.cm.Blues, method = 'Biased', sens = False):
-                          
+                          cmap=plt.cm.Blues, method = 'Biased', sens = False, ax=None, fig=None):
+    plt.rcParams['font.size'] = '16'
+    # drugs_map = ['never', 'not last year', 'last year']
+    
     if (sens):
         issens = "sensitive"
     else:
@@ -41,18 +42,19 @@ def plot_confusion_matrix(y_true, y_pred, classes, datasetname,
     cm = confusion_matrix(y_true, y_pred)
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    
-    fig, ax = plt.subplots(figsize=(10,6))
+    if ax is None or fig is None:
+        fig, ax = plt.subplots(figsize=(8,5))
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
     ax.grid(False)
     ax.set(xticks=np.arange(cm.shape[1]),
            yticks=np.arange(cm.shape[0]), 
-           xticklabels=classes, yticklabels=classes,
+           xticklabels=classes, 
+           yticklabels=classes,
            title=title,
            ylabel='True label',
            xlabel='Predicted label')
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+    plt.setp(ax.get_xticklabels(), ha="center",
              rotation_mode="anchor")
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
@@ -62,10 +64,31 @@ def plot_confusion_matrix(y_true, y_pred, classes, datasetname,
                     ha="center", va="center",
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
-
     
-    plt.savefig('confusionmatrices/cm_sens=' + str(sens) + "_" + str(method) + "_" + str(datasetname) + "_normalized=" +str(normalize))
+    # ax.get_xticklabels()[0].set_fontweight('heavy')
+    # ax.get_xticklabels()[0].set_color('red')
     return ax
+
+def plot_double_confusion_matrices(datasens, datanosens, label, classes, dataset, debiaser):
+    fig, ax = plt.subplots(1,2,figsize=(14,5))
+    plot_confusion_matrix(datasens['y_true'], 
+    datasens[label], 
+    classes=classes, 
+    normalize=True, 
+    title='Unprivileged group', 
+    method=debiaser, 
+    sens=True, 
+    ax=ax[0], fig=fig)
+
+    plot_confusion_matrix(datanosens['y_true'], 
+    datanosens[label], 
+    classes=classes, 
+    normalize=True, 
+    title='Privileged group', 
+    method=debiaser, 
+    sens=False, 
+    ax=ax[1], fig=fig)
+    plt.savefig('confusionmatrices/cm_'+ str(debiaser) + "_" + str(dataset) + ".pdf")
 
 def getprediction(data, label, classifier, groups_condition, sensitive_features, positive_label, debiaser = 'biased'):
     fold = KFold(n_splits = 10, shuffle = True)
@@ -101,7 +124,7 @@ def getprediction(data, label, classifier, groups_condition, sensitive_features,
         df_train = data.iloc[train]
         df_test = data.iloc[test]
 
-        x_train, x_test, y_train, y_test = utils._train_test_split(df_train, df_test, label)
+        x_train, x_test, y_train, _ = utils._train_test_split(df_train, df_test, label)
 
         if expbool:
             model.fit(x_train, y_train, sensitive_features=df_train[sensitive_features]) 
@@ -112,16 +135,14 @@ def getprediction(data, label, classifier, groups_condition, sensitive_features,
         newdata.iloc[test, newdata.columns.get_loc(label)] = pred
 
     return newdata
-    
+
+
 def generatecm(dataset, debiaser = None , normalize = False):
     data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(dataset, 2)
     newdata = getprediction(data, label, classifier, unpriv_group, sensitive_features, positive_label, debiaser=debiaser)
     classes = newdata['y_true'].unique()
-
     query = '&'.join([str(k) + '==' + str(v)
                      for k, v in unpriv_group.items()])
     datasens = newdata.query(query)
-    plot_confusion_matrix(datasens['y_true'], datasens[label], classes, dataset, normalize = normalize, method = debiaser, sens = True)
     datanosens = newdata.query('~(' + query + ')')
-
-    plot_confusion_matrix(datanosens['y_true'], datanosens[label], classes, dataset, normalize = normalize, method = debiaser, sens = False)
+    plot_double_confusion_matrices(datasens, datanosens, label, classes=classes, dataset=dataset, debiaser=debiaser)
