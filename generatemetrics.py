@@ -22,13 +22,13 @@ parser = argparse.ArgumentParser(description='Metrics generator for DEMV testing
 
 parser.add_argument('dataset', type=str, 
                     help='Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen method.'
-                    + ' All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.', choices=['adult', 'cmc', 'law', 'compas', 'crime', 'drugs', 'german', 'obesity', 'park', 'wine', 'all'])
+                    + ' All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.', choices=['adult', 'cmc', 'law', 'compas', 'crime', 'drug', 'german', 'obesity', 'park', 'wine', 'all'])
 
 parser.add_argument('method', type=str, 
                     help='Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.', choices=['biased', 'eg', 'grid', 'uniform', 'smote', 'adasyn'])
 
 parser.add_argument('number_of_features', type=int,
-                    help='Required argument: Number of sensitive features in the dataset to consider, up to 4. ', choices=[1,2,3,4])
+                    help='Required argument: Number of sensitive features in the dataset to consider, up to 3. If "1" is chosen, two datasets will be generated, one for each canonical sensitive feature  (as described in literature for that dataset)', choices=[1,2,3,4])
 
 parser.add_argument('--classifier', type=str, nargs='?', default="logistic",
                     help='Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).', choices=['logistic', 'gradient', 'svc', 'mlp'])
@@ -81,7 +81,7 @@ if not file_exists:
 cm = args.cm
 dataset = [args.dataset]
 method = [args.method]
-number_of_features = min(4,args.number_of_features)
+number_of_features = min(3,args.number_of_features)
 if args.classifier is not None:
     classi = args.classifier
     if(classi == 'logistic'):
@@ -126,12 +126,25 @@ for m in method:
     for d in dataset:
         print("Processing " + d  + " with " + m)
 
-        data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features)
-        #else:
-            #data, unpriv_group, sensitive_features, label, positive_label,k = get_items(d, number_of_features)
+        if(number_of_features == 1):
 
-        result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
+            data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features, singlefeature = 1)
+            result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
 
-        result.to_csv("ris/"+ str(number_of_features) + "features/metrics_" + d + "_" + m + "_" + str(number_of_features) + "_features_"+str(classi)+".csv")
+            result.to_csv("ris/"+ str(number_of_features) + "features/metrics_" + d + "_" +str(list(sensitive_features)[0]) + "_" + m + "_" + str(number_of_features) + "_features_"+str(classi)+".csv")
+
+            data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features, singlefeature = 2)
+            result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
+
+            result.to_csv("ris/"+ str(number_of_features) + "features/metrics_" + d + "_" +str(list(sensitive_features)[0]) + "_" + m + "_" + str(number_of_features) + "_features_"+str(classi)+".csv")
+
+
+
+        else:
+            data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features)
+
+            result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
+
+            result.to_csv("ris/"+ str(number_of_features) + "features/metrics_" + d + "_" + m + "_" + str(number_of_features) + "_features_"+str(classi)+".csv")
 
 

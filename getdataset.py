@@ -5,7 +5,7 @@ import numpy as np
 #return df, label, positive_label, sensitive_features, unpriv_group
 
 
-def getdataset(dataset, numberoffeatures):
+def getdataset(dataset, numberoffeatures, singlefeature = None):
     if(dataset == 'adult'):
         lab_enc = LabelEncoder()
         ord_enc = OrdinalEncoder()
@@ -55,7 +55,10 @@ def getdataset(dataset, numberoffeatures):
         k = 200
 
         if numberoffeatures == 1:
-            unpriv_group = {'sex':0}
+            if singlefeature != 2:
+                unpriv_group = {'sex':0}
+            else:
+                unpriv_group = {'race':0}
         elif numberoffeatures == 2:
             unpriv_group = {'sex':0, 'race':0}
         elif numberoffeatures == 3:
@@ -79,7 +82,10 @@ def getdataset(dataset, numberoffeatures):
         k = 3
 
         if numberoffeatures == 1:
-            unpriv_group = {'wife_religion': 1}
+            if singlefeature != 2:
+                unpriv_group = {'wife_religion': 1}
+            else:
+                unpriv_group = {'wife_work' : 1}
         elif numberoffeatures == 2:
             unpriv_group = {'wife_religion': 1, 'wife_work': 1}
         elif numberoffeatures == 3:
@@ -114,8 +120,10 @@ def getdataset(dataset, numberoffeatures):
         k = 29
 
         if numberoffeatures == 1:
-
-            protected_group = {'sex':0}
+            if singlefeature != 2:
+                protected_group = {'sex':0}
+            else:
+                protected_group = {'race': 0 }
         elif numberoffeatures == 2:
             protected_group = {'sex':0, 'race':0}
         elif numberoffeatures == 3:
@@ -159,7 +167,10 @@ def getdataset(dataset, numberoffeatures):
         k = 41
 
         if numberoffeatures == 1:
-            groups_condition = {'black_people': 1}
+            if singlefeature != 2:
+                groups_condition = {'black_people': 1}
+            else:
+                groups_condition = {'hisp_people': 1}
         if numberoffeatures == 2:
             groups_condition = {'black_people': 1, 'hisp_people':1}
         if numberoffeatures == 3:
@@ -211,7 +222,10 @@ def getdataset(dataset, numberoffeatures):
         k = 22
 
         if numberoffeatures == 1:
-            protected_group = {'race':1}
+            if singlefeature != 2:
+                protected_group = {'race':1}
+            else:
+                protected_group = {'gender': 0 }
         if numberoffeatures == 2:
             protected_group = {'race': 1, 'gender': 0}
         if numberoffeatures == 3:
@@ -249,7 +263,10 @@ def getdataset(dataset, numberoffeatures):
         unpriv_group = {'sex': 0, 'age': 0}
 
         if numberoffeatures == 1:
-            unpriv_group = {'sex' : 0}
+            if singlefeature != 2:
+                unpriv_group = {'sex' : 0}
+            else:
+                unpriv_group = {'age':0}
         if numberoffeatures == 2:
             unpriv_group = {'sex':0, 'age':0}
         if numberoffeatures == 3:
@@ -303,7 +320,10 @@ def getdataset(dataset, numberoffeatures):
         positive_label = 2
 
         if numberoffeatures == 1:
-            protected_group = {'race':1}
+            if singlefeature != 2:
+                protected_group = {'race':1}
+            else:
+                protected_group = {'gender': 1}
         if numberoffeatures == 2:
             protected_group = {'race':1, 'gender':1}
         if numberoffeatures == 3:
@@ -362,7 +382,10 @@ def getdataset(dataset, numberoffeatures):
         k = 10
 
         if numberoffeatures == 1:
-            protected_group = {'Gender': 1}
+            if singlefeature != 2:
+                protected_group = {'Gender': 1}
+            else:
+                protected_group = {'Age':1}
         if numberoffeatures == 2:
             protected_group = {'Gender':1, 'Age':1}
         if numberoffeatures == 3:
@@ -407,7 +430,10 @@ def getdataset(dataset, numberoffeatures):
         positive_label = 0
 
         if numberoffeatures == 1:
-            protected_group = {'age': 1}
+            if singlefeature !=2:
+                protected_group = {'age': 1}
+            else:
+                protected_group = {'sex':0}
         
         if numberoffeatures ==2:
             protected_group = {'age':1, 'sex':0}
@@ -457,7 +483,10 @@ def getdataset(dataset, numberoffeatures):
         positive_label = 6
 
         if numberoffeatures == 1:
-            protected_group = {'alcohol':0}
+            if singlefeature != 2:
+                protected_group = {'alcohol':0}
+            else:
+                protected_group = {'type': 1}
         
         if numberoffeatures == 2:
             protected_group = {'alcohol': 0 , 'type':1}
