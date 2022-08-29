@@ -25,7 +25,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
                           title=None,
                           cmap=plt.cm.Blues, method = 'Biased', sens = False, ax=None, fig=None):
     plt.rcParams['font.size'] = '16'
-    # drugs_map = ['never', 'not last year', 'last year']
+    drugs_map = ['never', 'not last\n year', 'last year']
     
     if (sens):
         issens = "sensitive"
@@ -49,11 +49,12 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     ax.grid(False)
     ax.set(xticks=np.arange(cm.shape[1]),
            yticks=np.arange(cm.shape[0]), 
-           xticklabels=classes, 
-           yticklabels=classes,
+           xticklabels=drugs_map, 
+           yticklabels=drugs_map,
            title=title,
            ylabel='True label',
            xlabel='Predicted label')
+    ax.xaxis.labelpad = 15
     plt.setp(ax.get_xticklabels(), ha="center",
              rotation_mode="anchor")
     fmt = '.2f' if normalize else 'd'
@@ -65,8 +66,8 @@ def plot_confusion_matrix(y_true, y_pred, classes,
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     
-    # ax.get_xticklabels()[0].set_fontweight('heavy')
-    # ax.get_xticklabels()[0].set_color('red')
+    ax.get_xticklabels()[0].set_fontweight('heavy')
+    ax.get_xticklabels()[0].set_color('red')
     return ax
 
 def plot_double_confusion_matrices(datasens, datanosens, label, classes, dataset, debiaser):
