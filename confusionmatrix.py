@@ -70,7 +70,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     # ax.get_xticklabels()[0].set_color('red')
     return ax
 
-def plot_double_confusion_matrices(datasens, datanosens, label, classes, dataset, debiaser):
+def plot_double_confusion_matrices(datasens, datanosens, label, classes, dataset, debiaser, sensitivefeature = None):
     fig, ax = plt.subplots(1,2,figsize=(14,5))
     plot_confusion_matrix(datasens['y_true'], 
     datasens[label], 
@@ -89,7 +89,15 @@ def plot_double_confusion_matrices(datasens, datanosens, label, classes, dataset
     method=debiaser, 
     sens=False, 
     ax=ax[1], fig=fig)
-    plt.savefig('confusionmatrices/cm_'+ str(debiaser) + "_" + str(dataset) + ".pdf")
+    if sensitivefeature:
+        sf = list(sensitivefeature)
+        names = ""
+        #Cut names of variables so file names aren't too long.
+        for name in sf:
+            names = names + str(name[0:6]) + "_"
+        plt.savefig('confusionmatrices/cm_'+ str(debiaser) + "_" + names  + str(dataset) + ".pdf")
+    else:
+        plt.savefig('confusionmatrices/cm_'+ str(debiaser) + "_" + str(dataset) + ".pdf")
 
 def getprediction(data, label, classifier, groups_condition, sensitive_features, positive_label, debiaser = 'biased'):
     fold = KFold(n_splits = 10, shuffle = True)
@@ -138,12 +146,12 @@ def getprediction(data, label, classifier, groups_condition, sensitive_features,
     return newdata
 
 
-def generatecm(dataset, debiaser = None , normalize = False):
-    data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(dataset, 2)
+def generatecm(dataset, debiaser = None , normalize = False, sensitivefeature = None):
+    data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(dataset, 2, sensitivefeature = sensitivefeature)
     newdata = getprediction(data, label, classifier, unpriv_group, sensitive_features, positive_label, debiaser=debiaser)
     classes = newdata['y_true'].unique()
     query = '&'.join([str(k) + '==' + str(v)
                      for k, v in unpriv_group.items()])
     datasens = newdata.query(query)
     datanosens = newdata.query('~(' + query + ')')
-    plot_double_confusion_matrices(datasens, datanosens, label, classes=classes, dataset=dataset, debiaser=debiaser)
+    plot_double_confusion_matrices(datasens, datanosens, label, classes=classes, dataset=dataset, debiaser=debiaser, sensitivefeature=sensitivefeature)

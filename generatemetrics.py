@@ -33,6 +33,7 @@ parser.add_argument('number_of_features', type=int,
 parser.add_argument('--classifier', type=str, nargs='?', default="logistic",
                     help='Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression (logistic).', choices=['logistic', 'gradient', 'svc', 'mlp'])
 parser.add_argument("--cm", action=argparse.BooleanOptionalAction, help = "Optional argument: only generate Confusion Matrices for the selected dataset.")
+parser.add_argument("--sensitivefeature", type = str, help = 'Optional argument: force sensitive feature to be considered (Only works if number of features is 1)')
 
 args = parser.parse_args()
 
@@ -96,6 +97,14 @@ else:
     classi = 'logistic'
     classifier = LogisticRegression()
 
+#Get array of sensitive features, divided by comma.
+if args.sensitivefeature:
+    sensitivefeature = args.sensitivefeature.split(',')
+    if len(sensitivefeature) != number_of_features:
+        raise Exception("Mismatch between selected number of features and number of sensitive features specified.")
+else:
+    sensitivefeature = args.sensitivefeature
+
 pipeline = Pipeline([
   ('scaler', StandardScaler()),
   ('classifier', classifier)
@@ -105,10 +114,10 @@ pipeline = Pipeline([
 if cm:
 
     dataset = dataset[0]
-    confusionmatrix.generatecm(dataset, normalize = True)
-    confusionmatrix.generatecm(dataset, debiaser="demv", normalize=True)
-    confusionmatrix.generatecm(dataset, debiaser="eg", normalize=True)
-    confusionmatrix.generatecm(dataset, debiaser="grid", normalize=True)
+    confusionmatrix.generatecm(dataset, normalize = True, sensitivefeature=sensitivefeature)
+    confusionmatrix.generatecm(dataset, debiaser="demv", normalize=True, sensitivefeature=sensitivefeature)
+    confusionmatrix.generatecm(dataset, debiaser="eg", normalize=True, sensitivefeature=sensitivefeature)
+    confusionmatrix.generatecm(dataset, debiaser="grid", normalize=True, sensitivefeature=sensitivefeature)
 
     sys.exit(0)
 
@@ -126,7 +135,22 @@ for m in method:
     for d in dataset:
         print("Processing " + d  + " with " + m)
 
-        if(number_of_features == 1):
+
+        #If sensitive features are specified, use them.
+        if sensitivefeature:
+            data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features, sensitivefeature = sensitivefeature)
+            result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
+            sf = list(sensitive_features)
+            names = ""
+            #Cut names of variables so file names aren't too long.
+            for name in sf:
+                names = names + str(name[0:6]) + "_"
+
+            result.to_csv("ris/"+ str(number_of_features) + "features/metrics_" + d + "_" + names + m + "_" +str(classi)+".csv")
+
+
+        #If sensitive features are not specified and the number_of_features is 1, generate metrics for each.
+        elif(number_of_features == 1):
 
             data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features, singlefeature = 1)
             result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
@@ -137,8 +161,6 @@ for m in method:
             result = run_metrics(m,data, unpriv_group, sensitive_features, label, positive_label,k)
 
             result.to_csv("ris/"+ str(number_of_features) + "features/metrics_" + d + "_" +str(list(sensitive_features)[0]) + "_" + m + "_" + str(number_of_features) + "_features_"+str(classi)+".csv")
-
-
 
         else:
             data, label, positive_label, sensitive_features, unpriv_group, k = getdataset.getdataset(d, number_of_features)
