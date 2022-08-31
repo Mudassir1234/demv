@@ -113,25 +113,29 @@ to receive help and information on the requested parameters. Shortly put, you sh
 Here is the output of the help command, which explains the parameters:
 
 ```shell
-usage: generatemetrics.py [-h] [--classifier [{logistic,gradient,svc,mlp}]] [--cm | --no-cm]
-                          {adult,cmc,law,compas,crime,drugs,german,obesity,park,wine,all} {biased,eg,grid,uniform,smote,adasyn} {1,2,3,4}
+usage: generatemetrics.py [-h] [--classifier [{logistic,gradient,svc,mlp}]] [--cm | --no-cm] [--sensitivefeature SENSITIVEFEATURE]
+                          {adult,cmc,law,compas,crime,drug,german,obesity,park,wine,all} {biased,eg,grid,uniform,smote,adasyn} {1,2,3,4}
 
 Metrics generator for DEMV testing.
 
 positional arguments:
-  {adult,cmc,law,compas,crime,drugs,german,obesity,park,wine,all}
-                        Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the chosen method.
-                        All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
+  {adult,cmc,law,compas,crime,drug,german,obesity,park,wine,all}
+                        Required argument: Chosen dataset to generate metrics for. Availability of datasets changes according to the
+                        chosen method. All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
   {biased,eg,grid,uniform,smote,adasyn}
                         Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.
-  {1,2,3}             Required argument: Number of sensitive features in the dataset to consider, up to 3.
+  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 3. If "1" is chosen, two
+                        datasets will be generated, one for each canonical sensitive feature (as described in literature for that
+                        dataset)
 
 optional arguments:
   -h, --help            show this help message and exit
   --classifier [{logistic,gradient,svc,mlp}]
-                        Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic Regression
-                        (logistic).
+                        Optional argument: classifier to use. Possible options are logistic, gradient, svc and mlp. Defaults to Logistic
+                        Regression (logistic).
   --cm, --no-cm         Optional argument: only generate Confusion Matrices for the selected dataset.
+  --sensitivefeature SENSITIVEFEATURE
+                        Optional argument: force sensitive feature to be considered (Only works if number of features is 1)
 
 Example usage: python generatemetrics.py cmc biased 3 --classifier svc
 ```
@@ -151,6 +155,21 @@ Results will then be saved in the folder "ris" inside the folder generatemetrics
 `ris/[number_of_features]features/metrics_[DATASET]_[METHOD]_[NUMBER_OF_FEATURES]_[CLASSIFIER].csv`
 
 A temporary discard_eval.csv file will also be created, but can be removed at any time and will always be overwritten by the subsequent execution.
+
+### sensitivefeature parameter 
+
+You can also specify the parameter --sensitivefeature if you want to choose a specific sensitive feature to generate metrics for, between those listed in the above table. If the dataset allows for it, metrics will be generated considering those specific features as sensitive.
+The number of specified sensitive features must be equal to the number_of_feature parameter. For instance:
+
+`python generatemetrics.py cmc biased 1 --sensitivefeature wife_religion`
+
+or
+
+`python generatemetrics.py cmc biased 1 --sensitivefeature wife_religion,wife_work`
+
+Multiple sensitive features specified this way must be separated by a comma.
+
+### cm parameter (confusion matrices)
 
 Another use case can be generating the confusion matrices for a dataset instead of the related metrics. In order to do that, just add the option --cm. In this case the number of features and method will be ignored, and several confusion matrices will be generated. In particular, the command
 
