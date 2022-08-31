@@ -156,7 +156,15 @@ Results will then be saved in the folder "ris" inside the folder generatemetrics
 
 A temporary discard_eval.csv file will also be created, but can be removed at any time and will always be overwritten by the subsequent execution.
 
-### sensitivefeature parameter 
+# Optional arguments
+
+We will now describe in greater detail the optional arguments.
+
+1. ### classifier
+
+It is possible to choose between multiple classifiers to generate the metrics. The default one is Logistic Regression. However, with the --classifier argument, it is possible to choose between Logistic Regression, Support Vector Classifier, Multilayer perceptron and Gradient Boosting Classifier. 
+
+2. ### sensitivefeature  
 
 You can also specify the parameter --sensitivefeature if you want to choose a specific sensitive feature to generate metrics for, between those listed in the above table. If the dataset allows for it, metrics will be generated considering those specific features as sensitive.
 The number of specified sensitive features must be equal to the number_of_feature parameter. For instance:
@@ -169,7 +177,7 @@ or
 
 Multiple sensitive features specified this way must be separated by a comma.
 
-### cm parameter (confusion matrices)
+3. ### cm (confusion matrices)
 
 Another use case can be generating the confusion matrices for a dataset instead of the related metrics. In order to do that, just add the option --cm. In this case the number of features and method will be ignored, and several confusion matrices will be generated. In particular, the command
 
