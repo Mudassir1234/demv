@@ -124,7 +124,7 @@ positional arguments:
                         All available datasets are: adult, cmc, compas, crime, drugs, german, obesity, park, wine.
   {biased,eg,grid,uniform,smote,adasyn}
                         Required argument: Chosen method to generate metrics for. Can be biased, eg, grid, uniform, smote, adasyn.
-  {1,2,3,4}             Required argument: Number of sensitive features in the dataset to consider, up to 4.
+  {1,2,3}             Required argument: Number of sensitive features in the dataset to consider, up to 3.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -146,7 +146,7 @@ or
 
 `python generatemetrics.py crime uniform 2`
 
-Results will then be saved in the folder "ris" inside the folder generatemetrics, according to how many sensitive variables you have chosen to consider, up to 4. In particular, the output file will have the following structure:
+Results will then be saved in the folder "ris" inside the folder generatemetrics, according to how many sensitive variables you have chosen to consider, up to 3. In particular, the output file will have the following structure:
 
 `ris/[number_of_features]features/metrics_[DATASET]_[METHOD]_[NUMBER_OF_FEATURES]_[CLASSIFIER].csv`
 
