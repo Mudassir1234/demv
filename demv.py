@@ -173,7 +173,7 @@ class DEMV:
         ----------
         dataset : pandas.DataFrame
             Dataset to be balanced
-        protected_attrs : list
+        protected_attrs : list<str>
             List of protected attribute names
         label_name : str
             Label name
