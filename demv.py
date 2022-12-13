@@ -2,14 +2,13 @@ import numpy as np
 import pandas as pd
 from imblearn.over_sampling import SMOTE, ADASYN
 
-
 def _generate_sample_smote(smote, x, x_tot, nnk, size=1):
-    samples_indices = np.random.randint(low=0, high=nnk.size, size=1)
-    rows = np.floor_divide(samples_indices, nnk.shape[1])
-    cols = np.mod(samples_indices, nnk.shape[1])
-    steps = np.random.uniform(size=size)[:, np.newaxis]
-    sample = smote._generate_samples(x, x_tot, nnk, rows, cols, steps)
-    return sample
+        samples_indices = np.random.randint(low=0, high=nnk.size, size=1)
+        rows = np.floor_divide(samples_indices, nnk.shape[1])
+        cols = np.mod(samples_indices, nnk.shape[1])
+        steps = np.random.uniform(size=size)[:, np.newaxis]
+        sample = smote._generate_samples(x, x_tot, nnk, rows, cols, steps)
+        return sample
 
 
 def _generate_sample_adasyn(adasyn, x):
@@ -91,9 +90,9 @@ def _sample(d: pd.DataFrame, s_vars: list, label: str, round_level: float, strat
         s = s_vars[i]
         i = i+1
         G1, k1 = _sample(d, s_vars, label, round_level, strategy, debug, i,
-                         G.copy(), cond=cond & (d[s] == 0), stop=stop)
+                        G.copy(), cond=cond & (d[s] == 0), stop=stop)
         G2, k2 = _sample(d, s_vars, label, round_level, strategy, debug, i,
-                         G.copy(), cond=cond & (d[s] == 1), stop=stop)
+                        G.copy(), cond=cond & (d[s] == 1), stop=stop)
         G += G1
         G += G2
         iter = max([iter, k1, k2])
@@ -104,7 +103,6 @@ def _sample(d: pd.DataFrame, s_vars: list, label: str, round_level: float, strat
             return pd.DataFrame(G.pop().append([g for g in G]).sample(frac=1, random_state=2)), disparities, iter
         else:
             return G, iter
-
 
 class DEMV:
     '''
@@ -144,7 +142,7 @@ class DEMV:
 
     '''
 
-    def __init__(self, round_level=None, debug=False, stop=-1, strategy='uniform'):
+    def __init__(self, round_level=1, debug=False, stop=-1, strategy='uniform'):
         '''
         Parameters
         ----------
