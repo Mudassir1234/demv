@@ -3,11 +3,11 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - fairlearn=0.7.0
-  - matplotlib==3.5.2
-  - numpy=1.21.5
-  - pandas=1.4.1
-  - python=3.9.12
-  - imbalanced-learn==0.9.0
-  - scikit-learn==1.0.2
-  - scipy==1.8.0
+  - fairlearn
+  - matplotlib
+  - numpy
+  - pandas
+  - python
+  - imbalanced-learn
+  - scikit-learn
+  - scipy

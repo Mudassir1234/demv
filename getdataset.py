@@ -5,7 +5,8 @@ import numpy as np
 #return df, label, positive_label, sensitive_features, unpriv_group
 
 
-def getdataset(dataset, numberoffeatures, singlefeature = None):
+
+def getdataset(dataset, numberoffeatures, singlefeature = None, sensitivefeature = None):
     if(dataset == 'adult'):
         lab_enc = LabelEncoder()
         ord_enc = OrdinalEncoder()
@@ -54,19 +55,27 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         positive_label = 1
         k = 200
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                unpriv_group = {'sex':0}
-            else:
-                unpriv_group = {'race':0}
-        elif numberoffeatures == 2:
-            unpriv_group = {'sex':0, 'race':0}
-        elif numberoffeatures == 3:
-            unpriv_group = {'sex':0, 'race':0, 'Bachelors':0}
-        elif numberoffeatures == 4:
-            unpriv_group = {'sex':0, 'race':0, 'Bachelors':0, 'hours':0}
+        sfs = {'sex':0, 'race':0, 'Bachelors':0}
+
+        if sensitivefeature:
+            unpriv_group = {}
+            for sf in sensitivefeature:
+                if sf in sfs.keys():
+                    unpriv_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
         else:
-            print(" ERROR: Wrong number of features. ")
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    unpriv_group = {'sex':0}
+                else:
+                    unpriv_group = {'race':0}
+            elif numberoffeatures == 2:
+                unpriv_group = {'sex':0, 'race':0}
+            elif numberoffeatures == 3:
+                unpriv_group = {'sex':0, 'race':0, 'Bachelors':0}
+            else:
+                print(" ERROR: Wrong number of features. ")
 
 
         sensitive_features = unpriv_group.keys()
@@ -80,33 +89,35 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         unpriv_group = {'wife_religion': 1, 'wife_work': 1}
         positive_label= 2
         k = 3
+        sfs = {'wife_religion':1, 'wife_work':1, 'wife_edu':0}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                unpriv_group = {'wife_religion': 1}
-            else:
-                unpriv_group = {'wife_work' : 1}
-        elif numberoffeatures == 2:
-            unpriv_group = {'wife_religion': 1, 'wife_work': 1}
-        elif numberoffeatures == 3:
-            unpriv_group = {'wife_religion': 1, 'wife_work': 1, 'wife_edu':0}
-            key = 'wife_edu'
-            threshold = 33
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-        elif numberoffeatures == 4:
-            unpriv_group = {'wife_religion': 1, 'wife_work':1, 'wife_edu':0, 'hus_occ':0}
-            threshold = {'wife_edu':33, 'hus_occ':3}
-            
-            key = 'wife_edu'
-            threshold = 33
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
+        if sensitivefeature:
+            unpriv_group = {}
+            for sf in sensitivefeature:
+                if sf == 'wife_edu':
+                    key = 'wife_edu'
+                    threshold = 33
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
 
-            key = 'hus_occ'
-            threshold = 3
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    unpriv_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    unpriv_group = {'wife_religion': 1}
+                else:
+                    unpriv_group = {'wife_work' : 1}
+            elif numberoffeatures == 2:
+                unpriv_group = {'wife_religion': 1, 'wife_work': 1}
+            elif numberoffeatures == 3:
+                unpriv_group = {'wife_religion': 1, 'wife_work': 1, 'wife_edu':0}
+                key = 'wife_edu'
+                threshold = 33
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
         sensitive_features = unpriv_group.keys()
         return data, label, positive_label, sensitive_features, unpriv_group, k
@@ -118,22 +129,34 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         label = 'two_year_recid'
         positive_label = 1
         k = 29
+        sfs = {'sex':0, 'race':0, 'age':0}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                protected_group = {'sex':0}
-            else:
-                protected_group = {'race': 0 }
-        elif numberoffeatures == 2:
-            protected_group = {'sex':0, 'race':0}
-        elif numberoffeatures == 3:
-            protected_group = {'sex':0, 'race':0, 'age':0}
-            key = 'age'
-            threshold = 50
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-        elif numberoffeatures == 4:
-            raise Exception("COMPAS only allows 3 sensitive variables.")
+        if sensitivefeature:
+            protected_group = {}
+            for sf in sensitivefeature:
+                if sf =='age':
+                    key = 'age'
+                    threshold = 50
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    protected_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    protected_group = {'sex':0}
+                else:
+                    protected_group = {'race': 0 }
+            elif numberoffeatures == 2:
+                protected_group = {'sex':0, 'race':0}
+            elif numberoffeatures == 3:
+                protected_group = {'sex':0, 'race':0, 'age':0}
+                key = 'age'
+                threshold = 50
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
         sensitive_vars = protected_group.keys()
 
@@ -165,12 +188,26 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         label = 'ViolentCrimesClass'
         positive_label = 100
         k = 41
+        sfs = {'black_people':1, 'hisp_people':1, 'MedRent':1}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                groups_condition = {'black_people': 1}
-            else:
-                groups_condition = {'hisp_people': 1}
+        if sensitivefeature:
+            groups_condition = {}
+            for sf in sensitivefeature:
+                if sf =='MedRent':
+                    key = 'MedRent'
+                    threshold = 0.1
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    groups_condition[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures ==1:
+                if singlefeature != 2:
+                    groups_condition = {'black_people': 1}
+                else:
+                    groups_condition = {'hisp_people': 1}
         if numberoffeatures == 2:
             groups_condition = {'black_people': 1, 'hisp_people':1}
         if numberoffeatures == 3:
@@ -180,21 +217,6 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
             threshold = 0.1
             data.loc[data[key] < threshold, key ] = 0
             data.loc[data[key] >= threshold, key ] = 1
-
-        if numberoffeatures == 4:
-            groups_condition = {'black_people':1, 'hisp_people':1, 'MedRent':1, 'racePctAsian':0}
-
-            key = 'MedRent'
-            threshold = 0.1
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'racePctAsian'
-            threshold = 1.1
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-
 
         sensitive_features = groups_condition.keys()
         return data, label, positive_label, sensitive_features, groups_condition, k
@@ -220,12 +242,26 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         positive_label = 0
         sensitive_features = ['race', 'gender']
         k = 22
+        sfs = {'race':1, 'gender':0, 'age':1}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                protected_group = {'race':1}
-            else:
-                protected_group = {'gender': 0 }
+        if sensitivefeature:
+            protected_group = {}
+            for sf in sensitivefeature:
+                if sf == 'age':
+                    key = 'age'
+                    threshold = 0
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    protected_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    protected_group = {'race':1}
+                else:
+                    protected_group = {'gender': 0 }
         if numberoffeatures == 2:
             protected_group = {'race': 1, 'gender': 0}
         if numberoffeatures == 3:
@@ -236,19 +272,7 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
             data.loc[data[key] < threshold, key ] = 0
             data.loc[data[key] >= threshold, key ] = 1
             
-        if numberoffeatures == 4:
-            protected_group = {'race': 1, 'gender': 0, 'age':1, 'country':0}
 
-            key = 'age'
-            threshold = 0
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'country'
-            threshold = 0.1
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-        
         sensitive_features = protected_group.keys()
 
         return data, label, positive_label, sensitive_features, protected_group, k
@@ -261,35 +285,36 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         positive_label = 1
         sensitive_features = ['sex', 'age']
         unpriv_group = {'sex': 0, 'age': 0}
+        sfs = {'sex':0, 'age':0, 'investment_as_income_percentage':0}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                unpriv_group = {'sex' : 0}
-            else:
-                unpriv_group = {'age':0}
-        if numberoffeatures == 2:
-            unpriv_group = {'sex':0, 'age':0}
-        if numberoffeatures == 3:
-            unpriv_group = {'sex':0, 'age':0, 'investment_as_income_percentage' :0}
+        if sensitivefeature:
+            unpriv_group = {}
+            for sf in sensitivefeature:
+                if sf == 'investment_as_income_percentage':
+                    key = 'investment_as_income_percentage'
+                    threshold = 3
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
 
-            key = 'investment_as_income_percentage'
-            threshold = 3
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    unpriv_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    unpriv_group = {'sex' : 0}
+                else:
+                    unpriv_group = {'age':0}
+            if numberoffeatures == 2:
+                unpriv_group = {'sex':0, 'age':0}
+            if numberoffeatures == 3:
+                unpriv_group = {'sex':0, 'age':0, 'investment_as_income_percentage' :0}
 
-        if numberoffeatures == 4:
-
-            unpriv_group = {'sex':0, 'age':0, 'investment_as_income_percentage' :0, 'month':0}
-
-            key = 'investment_as_income_percentage'
-            threshold = 3
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'month'
-            threshold = 30
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
+                key = 'investment_as_income_percentage'
+                threshold = 3
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
 
         k = 2
@@ -318,36 +343,35 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
 
         label = 'gpa'
         positive_label = 2
+        sfs = {'race':1, 'gender':1, 'age':0}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                protected_group = {'race':1}
-            else:
-                protected_group = {'gender': 1}
-        if numberoffeatures == 2:
-            protected_group = {'race':1, 'gender':1}
-        if numberoffeatures == 3:
-            protected_group = {'race':1, 'gender':1, 'age':0}
+        if sensitivefeature:
+            protected_group = {}
+            for sf in sensitivefeature:
+                if sf == 'age':
+                    key = 'age'
+                    threshold = 61
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    protected_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    protected_group = {'race':1}
+                else:
+                    protected_group = {'gender': 1}
+            if numberoffeatures == 2:
+                protected_group = {'race':1, 'gender':1}
+            if numberoffeatures == 3:
+                protected_group = {'race':1, 'gender':1, 'age':0}
 
-            key = 'age'
-            threshold = 61
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-        if numberoffeatures == 4:
-            protected_group = {'race':1, 'gender':1, 'age':0, 'fam_inc':0}
-
-            key = 'age'
-            threshold = 61
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'fam_inc'
-            threshold = 3
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-
+                key = 'age'
+                threshold = 61
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
         k = 103
         sensitive_features = protected_group.keys()
@@ -380,34 +404,35 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         label = 'y'
         positive_label = 0
         k = 10
+        sfs = {'Gender':1, 'Age':1, 'MTRANS':1}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                protected_group = {'Gender': 1}
-            else:
-                protected_group = {'Age':1}
-        if numberoffeatures == 2:
-            protected_group = {'Gender':1, 'Age':1}
-        if numberoffeatures == 3:
-            protected_group = {'Gender':1, 'Age':1, 'MTRANS':1}
+        if sensitivefeature:
+            protected_group = {}
+            for sf in sensitivefeature:
+                if sf == 'MTRANS':
+                    key = 'MTRANS'
+                    threshold = 3
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    protected_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    protected_group = {'Gender': 1}
+                else:
+                    protected_group = {'Age':1}
+            if numberoffeatures == 2:
+                protected_group = {'Gender':1, 'Age':1}
+            if numberoffeatures == 3:
+                protected_group = {'Gender':1, 'Age':1, 'MTRANS':1}
 
-            key = 'MTRANS'
-            threshold = 3
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-        if numberoffeatures == 4:
-            protected_group = {'Gender':1, 'Age':1, 'MTRANS':1,'family_history_with_overweight':0}
-
-            key = 'MTRANS'
-            threshold = 3
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'family_history_with_overweight'
-            threshold = 0.1
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
+                key = 'MTRANS'
+                threshold = 3
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
         sensitive_vars = protected_group.keys()
         return data, label, positive_label, sensitive_vars, protected_group, k 
@@ -428,38 +453,37 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
 
         label = 'score_cut'
         positive_label = 0
+        sfs = {'age':1, 'sex':0, 'PPE':0}
+            
+        if sensitivefeature:
+            protected_group = {}
+            for sf in sensitivefeature:
+                if sf == 'PPE':
+                    key = 'PPE'
+                    threshold = 0.14
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    protected_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature !=2:
+                    protected_group = {'age': 1}
+                else:
+                    protected_group = {'sex':0}
+            
+            if numberoffeatures ==2:
+                protected_group = {'age':1, 'sex':0}
 
-        if numberoffeatures == 1:
-            if singlefeature !=2:
-                protected_group = {'age': 1}
-            else:
-                protected_group = {'sex':0}
-        
-        if numberoffeatures ==2:
-            protected_group = {'age':1, 'sex':0}
+            if numberoffeatures == 3:
+                protected_group = {'age':1, 'sex':0, 'PPE':0}
 
-        if numberoffeatures == 3:
-            protected_group = {'age':1, 'sex':0, 'PPE':0}
-
-            key = 'PPE'
-            threshold = 0.14
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-        if numberoffeatures == 4:
-
-            protected_group = {'age':1, 'sex':0, 'PPE':0, 'Shimmer':1}
-
-            key = 'PPE'
-            threshold = 0.14
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'Shimmer'
-            threshold = 0.02
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
+                key = 'PPE'
+                threshold = 0.14
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
 
         sensitive_vars = protected_group.keys()
@@ -481,36 +505,37 @@ def getdataset(dataset, numberoffeatures, singlefeature = None):
         sensitive_variables = ['alcohol', 'type']
         protected_group = {'alcohol': 0, 'type': 1}
         positive_label = 6
+        sfs = {'alcohol':0, 'type':1, 'density':0}
 
-        if numberoffeatures == 1:
-            if singlefeature != 2:
-                protected_group = {'alcohol':0}
-            else:
-                protected_group = {'type': 1}
+        if sensitivefeature:
+            protected_group = {}
+            for sf in sensitivefeature:
+                if sf == 'density':
+                    key = 'density'
+                    threshold = 1.1
+                    data.loc[data[key] < threshold, key ] = 0
+                    data.loc[data[key] >= threshold, key ] = 1
+                if sf in sfs.keys():
+                    protected_group[sf] = sfs.get(sf)
+                else:
+                    raise Exception("Sensitive feature not found in selected dataset.")
+        else:
+            if numberoffeatures == 1:
+                if singlefeature != 2:
+                    protected_group = {'alcohol':0}
+                else:
+                    protected_group = {'type': 1}
         
-        if numberoffeatures == 2:
-            protected_group = {'alcohol': 0 , 'type':1}
+            if numberoffeatures == 2:
+                protected_group = {'alcohol': 0 , 'type':1}
 
-        if numberoffeatures == 3:
-            protected_group = {'alcohol':0, 'type': 1, 'density':0 }
+            if numberoffeatures == 3:
+                protected_group = {'alcohol':0, 'type': 1, 'density':0 }
 
-            key = 'density'
-            threshold = 1.1
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-        if numberoffeatures == 4:
-            protected_group = {'alcohol':0, 'type': 1, 'density':0, 'pH':1 }
-
-            key = 'density'
-            threshold = 1.1
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
-
-            key = 'pH'
-            threshold = 3.2
-            data.loc[data[key] < threshold, key ] = 0
-            data.loc[data[key] >= threshold, key ] = 1
+                key = 'density'
+                threshold = 1.1
+                data.loc[data[key] < threshold, key ] = 0
+                data.loc[data[key] >= threshold, key ] = 1
 
         sensitive_variables = protected_group.keys()
         k = 76
