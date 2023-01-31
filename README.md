@@ -20,11 +20,33 @@ The main idea behind the proposed method is that to enhance the classifier’s f
 We approach the problem by recursively identifying all the possible groups given by combining all the values of the sensible variables with the belonging label (class). Next, for each group, we compute its expected (𝑊𝑒𝑥𝑝) and observed (𝑊𝑜𝑏𝑠) sizes and look at the ratio among these two values. If 𝑊𝑒𝑥𝑝/𝑊𝑜𝑏𝑠 = 1, it implies that the group is fully balanced. Otherwise, if the ratio is less than one, the group size is larger than expected, so we must remove an
 element from the considered group accordingly to a chosen deletion strategy. Finally, if the ratio is greater than one, the group is smaller than expected, so we have to add another item accordingly to a generation strategy. For each group, we recursively repeat this balancing operation until 𝑊𝑒𝑥𝑝/𝑊𝑜𝑏𝑠 converge to one. It is worth noting that, in order to keep a high level of accuracy, the new items added to a group should be coherent in their values with the already existing ones.
 
-The paper describing our work is available at <http://dx.doi.org/10.1007/978-3-031-09316-6_11>.
+The papers describing our work are available at:
+
+- <https://doi.org/10.1016/j.ipm.2022.103226>
+- <http://dx.doi.org/10.1007/978-3-031-09316-6_11> ([pdf](https://www.researchgate.net/profile/Giordano-Daloisio/publication/361406303_Enhancing_Fairness_in_Classification_Tasks_with_Multiple_Variables_A_Data-_and_Model-Agnostic_Approach/links/6357a1ca8d4484154a32cf02/Enhancing-Fairness-in-Classification-Tasks-with-Multiple-Variables-A-Data-and-Model-Agnostic-Approach.pdf)).
 
 ## Citation request
 
-Please cite our paper if you use DEMV in your experiments:
+Please cite our papers if you use DEMV in your experiments:
+
+_Giordano d’Aloisio, Andrea D’Angelo, Antinisca Di Marco, Giovanni Stilo, Debiaser for Multiple Variables to enhance fairness in classification tasks, Information Processing & Management,
+Volume 60, Issue 2, 2023, 103226, ISSN 0306-4573, https://doi.org/10.1016/j.ipm.2022.103226._
+
+```bibtex
+@article{daloisio_debiaser_2023,
+title = {Debiaser for Multiple Variables to enhance fairness in classification tasks},
+journal = {Information Processing & Management},
+volume = {60},
+number = {2},
+pages = {103226},
+year = {2023},
+issn = {0306-4573},
+doi = {https://doi.org/10.1016/j.ipm.2022.103226},
+url = {https://www.sciencedirect.com/science/article/pii/S0306457322003272},
+author = {Giordano d’Aloisio and Andrea D’Angelo and Antinisca {Di Marco} and Giovanni Stilo},
+keywords = {Machine learning, Bias and Fairness, Multi-class classification, Preprocessing algorithm, Equality},
+}
+```
 
 _d’Aloisio, G., Stilo, G., Di Marco, A., D’Angelo, A. (2022). Enhancing Fairness in Classification Tasks with Multiple Variables: A Data- and Model-Agnostic Approach. In: Boratto, L., Faralli, S., Marras, M., Stilo, G. (eds) Advances in Bias and Fairness in Information Retrieval. BIAS 2022. Communications in Computer and Information Science, vol 1610. Springer, Cham. <https://doi.org/10.1007/978-3-031-09316-6_11>_
 
@@ -50,24 +72,24 @@ This repository is organized as follows:
 
 ## Datasets and methods
 
-DEMV was tested with numerous datasets and methods. 
+DEMV was tested with numerous datasets and methods.
 Please check the aforementioned paper for more information on the datasets and their preprocessing.
 
 ### Datasets
 
 The included datasets are:
 
-| Dataset  | Full Name | Type | Description  | Sensitive variables  |
-|---|---|---|---| ---|
-| ADULT  | Adult income | Binary | The goal is to predict if a person has an income higher than 50k a year.   |  Sex, race, bachelors |
-| COMPAS | ProPublica Recidivism | Binary | The goal is to predict if a person will recidivate in the next two years. |Sex, race, age  |
-| GERMAN| German credit | Binary | The goal is to predict if a person will recidivate in the next two years. | Sex, age, investment_as_income_percentage |
-|CMC| Contraceptive Method Choice | Multiclass | This multi-class dataset comprises 1,473 instances and ten columns about women’s contraceptive method choice. | wife_religion, wife_work, wife_edu |
-| CRIME | Communities and Crime | Multiclass | This multi-class dataset is made of 1,994 instances by 100 attributes and contains information about the per-capita violent crimes in a community. | black_people, hisp_people, MedRent |
-| DRUG | Drug Usage | Multiclass | This multi-class dataset has 1,885 instances and 15 attributes about the frequency of drugs consumption. | race, gender, age  |
-| LAW | Law School Admission | Multiclass | This multi-class dataset comprises 20,694 samples by 14 attributes and contains information about the bar passage data of Law School students.| race, gender, age |
-| PARK | Parkinson's Telemonitoring | Multiclass |  This multi-class dataset comprises 5875 items and 19 features about Unified Parkinson’s Disease Rating Scale (UPDRS) score classification. | age, sex, PPE  |
-| WINE | Wine Quality | Multiclass | This multi-class dataset comprises 6,438 instances and 13 attributes about wine quality (variable quality). The classes are four increasing values indicating quality. | alcohol, type, density |
+| Dataset | Full Name                   | Type       | Description                                                                                                                                                            | Sensitive variables                       |
+| ------- | --------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| ADULT   | Adult income                | Binary     | The goal is to predict if a person has an income higher than 50k a year.                                                                                               | Sex, race, bachelors                      |
+| COMPAS  | ProPublica Recidivism       | Binary     | The goal is to predict if a person will recidivate in the next two years.                                                                                              | Sex, race, age                            |
+| GERMAN  | German credit               | Binary     | The goal is to predict if a person will recidivate in the next two years.                                                                                              | Sex, age, investment_as_income_percentage |
+| CMC     | Contraceptive Method Choice | Multiclass | This multi-class dataset comprises 1,473 instances and ten columns about women’s contraceptive method choice.                                                          | wife_religion, wife_work, wife_edu        |
+| CRIME   | Communities and Crime       | Multiclass | This multi-class dataset is made of 1,994 instances by 100 attributes and contains information about the per-capita violent crimes in a community.                     | black_people, hisp_people, MedRent        |
+| DRUG    | Drug Usage                  | Multiclass | This multi-class dataset has 1,885 instances and 15 attributes about the frequency of drugs consumption.                                                               | race, gender, age                         |
+| LAW     | Law School Admission        | Multiclass | This multi-class dataset comprises 20,694 samples by 14 attributes and contains information about the bar passage data of Law School students.                         | race, gender, age                         |
+| PARK    | Parkinson's Telemonitoring  | Multiclass | This multi-class dataset comprises 5875 items and 19 features about Unified Parkinson’s Disease Rating Scale (UPDRS) score classification.                             | age, sex, PPE                             |
+| WINE    | Wine Quality                | Multiclass | This multi-class dataset comprises 6,438 instances and 13 attributes about wine quality (variable quality). The classes are four increasing values indicating quality. | alcohol, type, density                    |
 
 ## Experiment replication
 
@@ -162,9 +184,9 @@ We will now describe in greater detail the optional arguments.
 
 1. ### classifier
 
-It is possible to choose between multiple classifiers to generate the metrics. The default one is Logistic Regression. However, with the --classifier argument, it is possible to choose between Logistic Regression, Support Vector Classifier, Multilayer perceptron and Gradient Boosting Classifier. 
+It is possible to choose between multiple classifiers to generate the metrics. The default one is Logistic Regression. However, with the --classifier argument, it is possible to choose between Logistic Regression, Support Vector Classifier, Multilayer perceptron and Gradient Boosting Classifier.
 
-2. ### sensitivefeature  
+2. ### sensitivefeature
 
 You can also specify the parameter --sensitivefeature if you want to choose a specific sensitive feature to generate metrics for, between those listed in the above table. If the dataset allows for it, metrics will be generated considering those specific features as sensitive.
 The number of specified sensitive features must be equal to the number_of_feature parameter. For instance:
@@ -186,16 +208,15 @@ Another use case can be generating the confusion matrices for a dataset instead 
 will ignore the "demv" and "3" attributes and generate the following confusion matrices:
 
 1. Confusion matrix for the sensible groups in the dataset:
-    1. Without any debiaser
-    2. Pre-processed with DEMV
-    3. Processed with Exponentiated Gradient
-    4. Processed with Grid Search
+   1. Without any debiaser
+   2. Pre-processed with DEMV
+   3. Processed with Exponentiated Gradient
+   4. Processed with Grid Search
 2. Confusion matrix for the non-sensible groups in the dataset:
-    1. Without any debiaser
-    2. Pre-processed with DEMV
-    3. Processed with Exponentiated Gradient
-    4. Processed with Grid Search.
-  
+   1. Without any debiaser
+   2. Pre-processed with DEMV
+   3. Processed with Exponentiated Gradient
+   4. Processed with Grid Search.
 
 ## DEMV class description
 
