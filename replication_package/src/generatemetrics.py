@@ -10,13 +10,16 @@ from fairlearn.reductions import (
     ZeroOneLoss,
     GridSearch,
 )
-import replication_package.getdataset as getdataset
-from replication_package.utils import *
-from demv import DEMV
+import getdataset as getdataset
+from utils import *
 import warnings
 import os
-import replication_package.confusionmatrix as confusionmatrix
+import confusionmatrix as confusionmatrix
 from os.path import exists
+import sys
+
+sys.path.append("../../demv")
+from demv import DEMV
 
 warnings.filterwarnings("ignore")
 import argparse

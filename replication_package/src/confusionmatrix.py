@@ -14,8 +14,11 @@ from sklearn.model_selection import KFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-import replication_package.getdataset as getdataset
-import replication_package.utils as utils
+import getdataset as getdataset
+import utils as utils
+import sys
+
+sys.path.append("../../demv")
 from demv import DEMV
 
 pipeline = Pipeline(

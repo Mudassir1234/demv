@@ -4,6 +4,9 @@ from collections import defaultdict
 from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score, accuracy_score, confusion_matrix, zero_one_loss
 from copy import deepcopy
+import sys
+
+sys.path.append("../../demv")
 from demv import DEMV
 from fairlearn.metrics import MetricFrame
 
