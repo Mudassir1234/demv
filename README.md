@@ -5,7 +5,6 @@
 ## Table of contents
 
 - [Citation request](#citation-request)
-- [Project structure](#project-structure)
 - [General info](#general-info)
 - [DEMV class description](#demv-class-description)
   - [Attributes](#attributes)
@@ -48,12 +47,6 @@ _d’Aloisio, G., Stilo, G., Di Marco, A., D’Angelo, A. (2022). Enhancing Fair
 }
 ```
 
-## Project structure
-
-This repository is organized as follows:
-
-1. The source code of DEMV is in the `demv` folder.
-
 ## General info
 
 DEMV is a Debiaser for Multiple Variables that aims to increase Fairness in any given dataset, both binary and categorical, with one or more sensitive variables, while keeping the accuracy of the classifier as high as possible.
@@ -83,50 +76,74 @@ The papers describing our work are available at:
 
   Maximum number of balance iterations
 
-- `strategy: string`
-
-  Balancing strategy to use. Must be one of `smote`, `adasyn` and `uniform` (default is `uniform`)
-
 - `iter : int`
 
   Maximum number of iterations
 
 ### Methods
 
-- `__init__(self, round_level=None, debug=False, stop=-1, strategy='uniform')`
+- `__init__(self, sensitive_vars, round_level=1, stop=10000, verbose=False)`
 
-        Creates a new DEMV instance
-
-        Parameters
-        ----------
+      Args
+      ----------
+        sensitive_vars : list
+            List of sensitive variable names
         round_level : float, optional
-            Tolerance value to balance the sensitive groups (default is None)
-        debug : bool, optional
-            Prints w_exp/w_obs, useful for debugging (default is False)
+            Tolerance value to balance the sensitive groups (default is 1)
         stop : int, optional
-            Maximum number of balance iterations (default is -1)
-        strategy: string, optional
-            Balancing strategy to use. Must be one of `smote`, `adasyn` and `uniform` (default is `uniform`)
+            Maximum number of iterations to balance the sensitive groups (default is 10000)
+        verbose : bool, optional
+            Prints w_exp/w_obs, useful for debugging (default is False)
 
-- `fit_transform(dataset: pandas.DataFrame, protected_attrs: list, label_name: str)`
+- `fit(self, x: pd.DataFrame, y: np.ndarray)`
 
-        Balances the dataset's sensitive groups
+  Balances the dataset's sensitive groups
 
-        Parameters
+        Args
         ----------
-        dataset : pandas.DataFrame
+        x : pd.DataFrame
             Dataset to be balanced
-        protected_attrs : list
-            List of protected attribute names
-        label_name : str
-            Label name
+        y : array-like
+            Labels of the dataset
 
         Returns
         -------
-        pandas.DataFrame :
-            Balanced dataset
+         x: Balanced dataset
+         y: Balanced labels of the dataset
 
-- `get_iters()`
+- `transform(self, x: pd.DataFrame, y: np.ndarray)`
+
+  Balances the dataset's sensitive groups
+
+        Args
+        ----------
+        x : pd.DataFrame
+            Dataset to be balanced
+        y : array-like
+            Labels of the dataset
+
+        Returns
+        -------
+         x: Balanced dataset
+         y: Balanced labels of the dataset
+
+- `fit_transform(self, x: pd.DataFrame, y: np.ndarray)`
+
+  Balances the dataset's sensitive groups
+
+        Args
+        ----------
+        x : pd.DataFrame
+            Dataset to be balanced
+        y : array-like
+            Labels of the dataset
+
+        Returns
+        -------
+         x: Balanced dataset
+         y: Balanced labels of the dataset
+
+- `get_iters(self)`
 
       Gets the maximum number of iterations
 
@@ -134,6 +151,12 @@ The papers describing our work are available at:
         -------
         int:
             maximum number of iterations
+
+- `get_disparities(self)`
+  Returns the list of w_exp/w_obs
+
+        Returns:
+        list: list of disparities values
 
 ### Example usage
 
@@ -147,8 +170,10 @@ df = pd.read_csv('some_data.csv')
 protected_attrs = ['s1','s2']
 label = 'l'
 
-demv = DEMV(round_level=1)
-df_bal = demv.fit_transform(df, protected_attrs, label)
+demv = DEMV(sensitive_vars = protected_attrs, round_level = 1)
+x = df.drop(label, axis=1)
+y = df[label]
+x_new, y_new = demv.fit_transform(x, y)
 print('Maximum number of iterations: ',demv.get_iters())
 ```
 
