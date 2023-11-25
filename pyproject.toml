@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "demv"
-version = "1.0.0"
+version = "1.0.1"
 description = "Debiaser for Multiple Variables(DEMV) is a pre-processing algorithm for binary and multi-class datasets that mitigates bias by perfectly balancing the sensitive groups identified by each possible sensitive variables' value and each label's value"
 readme = "README.md"
 authors = [{ name = "Giordano d'Aloisio", email = "giordano.daloisio@gmail.com" }]
