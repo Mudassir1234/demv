@@ -95,9 +95,10 @@ def sample(
             limit *= len(np.unique(d[s]))
         if len(G) == limit * len(np.unique(d[label])):
             return (
-                pd.DataFrame(
-                    G.pop().append([g for g in G]).sample(frac=1, random_state=2)
-                ),
+                pd.concat([g for g in G]).sample(frac=1, random_state=2),
+                # pd.DataFrame(
+                #     G.pop().append([g for g in G]).sample(frac=1, random_state=2)
+                # ),
                 disparities,
                 iter,
             )
