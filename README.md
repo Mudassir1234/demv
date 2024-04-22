@@ -4,12 +4,33 @@
 
 ## Table of contents
 
+- [Installation](#installation)
 - [Citation request](#citation-request)
 - [General info](#general-info)
 - [DEMV class description](#demv-class-description)
   - [Attributes](#attributes)
   - [Methods](#methods)
   - [Example usage](#example-usage)
+
+## Installation
+
+### Pip
+
+The easiest way to install DEMV is from the PyPI repository:
+
+```shell
+pip install demv
+```
+
+### Manual installation
+
+Clone this repository and then install the following libraries:
+
+- `pandas`
+- `numpy`
+- `scikit-learn`
+
+The source code of DEMV is inside the `DEMV` folder.
 
 ## Citation request
 
